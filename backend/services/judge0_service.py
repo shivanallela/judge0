@@ -17,12 +17,15 @@ class Judge0Service:
             return False
 
     def resolve_url(self) -> str:
+        # If an explicit JUDGE0_URL is configured (e.g. in Railway production), use it directly
+        if Config.JUDGE0_URL:
+            return Config.JUDGE0_URL
+
         now = time.time()
         if self._cached_url and (now - self._last_resolved_at < self._cache_ttl):
             return self._cached_url
 
         candidate_urls = [
-            Config.JUDGE0_URL,
             "http://localhost:2358",
             "http://127.0.0.1:2358"
         ]
@@ -42,7 +45,7 @@ class Judge0Service:
                     self._last_resolved_at = now
                     return wsl_url
 
-        return Config.JUDGE0_URL or "http://localhost:2358"
+        return "http://localhost:2358"
 
     def get_status(self) -> dict:
         url = self.resolve_url()

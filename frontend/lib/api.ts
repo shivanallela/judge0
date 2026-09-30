@@ -26,7 +26,7 @@ export interface RunResponse {
   error?: string;
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+const API_BASE_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000').replace(/\/+$/, '');
 
 export async function checkJudge0Status(): Promise<Judge0StatusResponse> {
   try {
