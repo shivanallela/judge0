@@ -6,9 +6,9 @@ export interface LanguageConfig {
   id: number;
   name: string;
   version: string;
+  displayName: string;
   extension: string;
   filename: string;
-  icon: string;
   monacoLang: string;
   template: string;
 }
@@ -18,9 +18,9 @@ export const LANGUAGES: Record<number, LanguageConfig> = {
     id: 71,
     name: 'Python',
     version: '3.8.1',
+    displayName: 'Python 3.8.1',
     extension: '.py',
     filename: 'main.py',
-    icon: '🐍',
     monacoLang: 'python',
     template: 'print("Hello, World!")\n',
   },
@@ -28,9 +28,9 @@ export const LANGUAGES: Record<number, LanguageConfig> = {
     id: 50,
     name: 'C',
     version: 'GCC 9.2.0',
+    displayName: 'C',
     extension: '.c',
     filename: 'main.c',
-    icon: '🇨',
     monacoLang: 'c',
     template: `#include <stdio.h>
 
@@ -44,9 +44,9 @@ int main() {
     id: 54,
     name: 'C++',
     version: 'GCC 9.2.0',
+    displayName: 'C++',
     extension: '.cpp',
     filename: 'main.cpp',
-    icon: '⚙️',
     monacoLang: 'cpp',
     template: `#include <iostream>
 using namespace std;
@@ -61,9 +61,9 @@ int main() {
     id: 62,
     name: 'Java',
     version: 'OpenJDK 13.0.1',
+    displayName: 'Java',
     extension: '.java',
     filename: 'Main.java',
-    icon: '☕',
     monacoLang: 'java',
     template: `public class Main {
     public static void main(String[] args) {
@@ -85,8 +85,6 @@ export default function LanguageSelector({
   onSelect,
   disabled = false,
 }: LanguageSelectorProps) {
-  const currentLang = LANGUAGES[selectedId] || LANGUAGES[71];
-
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newId = Number(e.target.value);
     const newLang = LANGUAGES[newId];
@@ -96,24 +94,24 @@ export default function LanguageSelector({
   };
 
   return (
-    <div className="flex items-center gap-2 bg-[#1e293b] border border-white/10 rounded-lg px-3 py-1.5 transition-all hover:border-cyan-500/50 focus-within:border-cyan-500 focus-within:ring-2 focus-within:ring-cyan-500/20">
-      <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
-        Language:
-      </span>
-      <span className="text-base select-none">{currentLang.icon}</span>
+    <div className="relative inline-flex items-center">
       <select
+        id="languageSelect"
         value={selectedId}
         onChange={handleChange}
         disabled={disabled}
         aria-label="Select Programming Language"
-        className="bg-transparent border-none text-slate-100 font-semibold text-sm outline-none cursor-pointer pr-1"
+        className="h-8 appearance-none bg-slate-800 hover:bg-slate-750 text-slate-200 hover:text-white border border-slate-700 hover:border-slate-600 rounded-md pl-3 pr-7 text-xs font-medium cursor-pointer transition focus:outline-none focus:ring-1 focus:ring-slate-500 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {Object.values(LANGUAGES).map((lang) => (
-          <option key={lang.id} value={lang.id} className="bg-[#0f172a] text-slate-100">
-            {lang.name} ({lang.version})
+          <option key={lang.id} value={lang.id} className="bg-slate-900 text-slate-200 py-1">
+            {lang.displayName}
           </option>
         ))}
       </select>
+      <span className="pointer-events-none absolute right-2.5 text-[10px] text-slate-400 select-none">
+        ▼
+      </span>
     </div>
   );
 }

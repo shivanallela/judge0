@@ -61,32 +61,34 @@ export default function CodeEditor({
   return (
     <section className="flex flex-col flex-1 min-h-[300px] bg-[#080d1a] border-b border-white/10 overflow-hidden">
       {/* Editor Header Bar */}
-      <div className="h-10 bg-[#0f172a] border-b border-white/10 flex items-center justify-between px-4">
-        <div className="flex items-center gap-2 text-xs font-semibold text-slate-300">
-          <span className="text-sm">📄</span>
-          <span>{filename}</span>
-        </div>
+      <div className="h-9 bg-[#0f172a] border-b border-white/10 flex items-center justify-between px-4 shrink-0">
+        <span className="text-xs font-medium text-slate-300 font-mono">
+          {filename}
+        </span>
         <div className="flex items-center gap-1.5">
           <button
             onClick={onReset}
+            id="resetCodeBtn"
             title="Reset code to starter template"
-            className="px-2.5 py-1 text-xs font-medium text-slate-400 hover:text-slate-100 hover:bg-[#1e293b] rounded transition"
+            className="h-6 px-2.5 bg-slate-800 hover:bg-slate-700 active:bg-slate-900 text-slate-300 hover:text-white border border-slate-700 hover:border-slate-600 rounded text-xs font-medium transition cursor-pointer"
           >
-            ↺ Reset
+            Reset
           </button>
           <button
             onClick={onClear}
+            id="clearCodeBtn"
             title="Clear code editor"
-            className="px-2.5 py-1 text-xs font-medium text-slate-400 hover:text-slate-100 hover:bg-[#1e293b] rounded transition"
+            className="h-6 px-2.5 bg-slate-800 hover:bg-slate-700 active:bg-slate-900 text-slate-300 hover:text-white border border-slate-700 hover:border-slate-600 rounded text-xs font-medium transition cursor-pointer"
           >
-            🗑 Clear
+            Clear
           </button>
           <button
             onClick={handleCopy}
+            id="copyCodeBtn"
             title="Copy code to clipboard"
-            className="px-2.5 py-1 text-xs font-medium text-slate-400 hover:text-slate-100 hover:bg-[#1e293b] rounded transition"
+            className="h-6 px-2.5 bg-slate-800 hover:bg-slate-700 active:bg-slate-900 text-slate-300 hover:text-white border border-slate-700 hover:border-slate-600 rounded text-xs font-medium transition cursor-pointer"
           >
-            {copied ? '✓ Copied!' : '📋 Copy'}
+            {copied ? 'Copied' : 'Copy'}
           </button>
         </div>
       </div>
@@ -120,7 +122,7 @@ export default function CodeEditor({
       </div>
 
       {/* Editor Footer / Stats */}
-      <div className="h-6 bg-[#0f172a] border-t border-white/10 flex items-center justify-between px-3 text-[11px] text-slate-500 font-mono">
+      <div className="h-6 bg-[#0f172a] border-t border-white/10 flex items-center justify-between px-3 text-[11px] text-slate-500 font-mono shrink-0">
         <span>
           Line {cursorPos.line}, Col {cursorPos.col}
         </span>
