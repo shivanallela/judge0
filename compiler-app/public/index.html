@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CodeSphere | Online Compiler powered by Judge0</title>
+  <meta name="description" content="Simple, fast, modern online code compiler for Python, C, C++, and Java powered by local Judge0.">
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Top Navigation Header -->
+    <header class="app-header">
+      <div class="header-left">
+        <div class="brand-logo">
+          <span class="logo-icon">⚡</span>
+          <div class="brand-text">
+            <h1>CodeSphere <span class="brand-badge">Local</span></h1>
+            <p class="brand-sub">Online Code Compiler</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="header-center">
+        <!-- Language Selector -->
+        <div class="language-picker-wrap">
+          <span class="picker-label">Language:</span>
+          <div class="select-icon-prefix" id="langIcon">🐍</div>
+          <select id="languageSelect" class="language-dropdown">
+            <option value="71" data-ext=".py" data-icon="🐍" selected>Python (3.8.1)</option>
+            <option value="50" data-ext=".c" data-icon="🇨">C (GCC 9.2.0)</option>
+            <option value="54" data-ext=".cpp" data-icon="⚙️">C++ (GCC 9.2.0)</option>
+            <option value="62" data-ext=".java" data-icon="☕">Java (OpenJDK 13)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <!-- Engine Status Indicator -->
+        <div class="engine-status" id="engineStatus" title="Checking local Judge0 connectivity...">
+          <span class="status-dot ping"></span>
+          <span class="status-label" id="statusLabel">Judge0: Connecting...</span>
+        </div>
+
+        <!-- Prominent Run Button -->
+        <button id="runBtn" class="btn btn-run" title="Execute Code (Ctrl+Enter)">
+          <span class="btn-icon">▶</span>
+          <span class="btn-text">Run</span>
+          <span class="btn-shortcut">Ctrl+Enter</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Compiler Workspace -->
+    <main class="compiler-workspace">
+      <!-- Top/Middle: Large Code Editor -->
+      <section class="editor-pane">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span class="file-icon">📄</span>
+            <span id="currentFileName">main.py</span>
+          </div>
+          <div class="editor-actions">
+            <button id="resetCodeBtn" class="tool-btn" title="Reset to starter template">
+              <span>↺</span> Reset
+            </button>
+            <button id="clearCodeBtn" class="tool-btn" title="Clear code editor">
+              <span>🗑</span> Clear
+            </button>
+            <button id="copyCodeBtn" class="tool-btn" title="Copy code to clipboard">
+              <span>📋</span> Copy
+            </button>
+          </div>
+        </div>
+
+        <div class="editor-body">
+          <div class="editor-gutter" id="lineGutter">
+            <div class="gutter-num">1</div>
+          </div>
+          <textarea id="codeEditor" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="// Write or paste your code here..."></textarea>
+        </div>
+
+        <div class="editor-footer">
+          <span id="editorStats">Line 1, Col 1</span>
+          <span id="langMeta">Python 3.8.1 • UTF-8</span>
+        </div>
+      </section>
+
+      <!-- Bottom: Terminal Workbench (Interactive Input & Output) -->
+      <section class="terminal-workbench" id="terminalWorkbench">
+        <div class="terminal-topbar">
+          <div class="terminal-tab">
+            <span class="term-tab-icon">📟</span>
+            <span class="term-tab-title">TERMINAL</span>
+          </div>
+          <div class="terminal-topbar-right">
+            <div id="statusBadge" class="status-badge hidden">Accepted</div>
+            <div class="metrics-pill hidden" id="metricsPill">
+              <span id="metricTime">Time: --</span>
+              <span class="metric-divider">•</span>
+              <span id="metricMem">Mem: --</span>
+            </div>
+            <button id="clearOutputBtn" class="clear-btn" title="Clear terminal output">✕ Clear Output</button>
+          </div>
+        </div>
+
+        <div class="terminal-split-view">
+          <!-- Terminal Input Area -->
+          <div class="terminal-input-col" id="terminalInputCol">
+            <div class="term-col-header">
+              <div class="term-prompt-label">
+                <span class="prompt-chevron">&gt;</span>
+                <span class="prompt-text">Input:</span>
+              </div>
+              <span id="inputStatusHint" class="prompt-hint">Program stdin</span>
+            </div>
+            <div class="term-input-box-wrapper">
+              <textarea id="customInput" class="term-stdin-editor" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="Enter input here... (e.g. Shiva&#10;20&#10;Hyderabad)"></textarea>
+            </div>
+            <div class="term-input-controls">
+              <button type="button" id="runWithInputBtn" class="btn-run-with-input" title="Run code with entered input">
+                <span class="btn-icon">▶</span>
+                <span class="btn-text">Run with Input</span>
+              </button>
+              <button type="button" id="clearInputBtn" class="btn-clear-input" title="Clear input">
+                Clear
+              </button>
+              <span class="term-input-note">Passed to Judge0 as stdin</span>
+            </div>
+          </div>
+
+          <!-- Terminal Output Area -->
+          <div class="terminal-output-col">
+            <div class="term-col-header">
+              <div class="term-prompt-label">
+                <span class="prompt-chevron">&gt;</span>
+                <span class="prompt-text">Output:</span>
+              </div>
+              <span id="outputStateHint" class="prompt-hint">Execution console</span>
+            </div>
+
+            <div class="output-body" id="outputBody">
+              <!-- Empty state -->
+              <div class="empty-state" id="emptyState">
+                <div class="empty-icon">⚡</div>
+                <p>Click <strong>▶ Run</strong> or <strong>▶ Run with Input</strong> to execute.</p>
+                <span class="shortcut-tip">Press <kbd>Ctrl</kbd> + <kbd>Enter</kbd> to run directly.</span>
+              </div>
+
+              <!-- Loading Spinner State -->
+              <div class="loading-state hidden" id="loadingState">
+                <div class="spinner"></div>
+                <p id="loadingMsg">Executing through local Judge0 sandbox...</p>
+              </div>
+
+              <!-- Output Blocks Area -->
+              <div class="output-blocks hidden" id="outputBlocks">
+                <!-- Standard Output -->
+                <div class="out-block stdout-block" id="stdoutSec">
+                  <div class="block-label">STDOUT:</div>
+                  <pre class="code-terminal stdout-text" id="stdoutText"></pre>
+                </div>
+
+                <!-- Standard Error / Runtime Error -->
+                <div class="out-block stderr-block hidden" id="stderrSec">
+                  <div class="block-label error-label" id="stderrLabel">STDERR / RUNTIME ERROR:</div>
+                  <pre class="code-terminal stderr-text" id="stderrText"></pre>
+                </div>
+
+                <!-- Compilation Error -->
+                <div class="out-block compile-block hidden" id="compileSec">
+                  <div class="block-label error-label">COMPILATION ERROR:</div>
+                  <pre class="code-terminal compile-text" id="compileText"></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Bottom Status Bar -->
+    <footer class="app-statusbar">
+      <div class="status-left">
+        <span class="status-item">Engine: <strong id="engineName">Judge0 v1.13.1</strong></span>
+        <span class="status-divider">•</span>
+        <span class="status-item">Host: <span id="engineEndpoint">localhost:2358</span></span>
+      </div>
+      <div class="status-right">
+        <span class="status-item">CodeSphere Local Online Compiler</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- JavaScript Application Files -->
+  <script src="js/templates.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
